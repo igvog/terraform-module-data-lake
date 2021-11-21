@@ -63,3 +63,79 @@ resource "aws_glue_job" "glue_job" {
     ignore_changes        = []
   }
 }
+
+
+
+
+
+resource "aws_glue_trigger" "glue_job_trigger" {
+  count = var.glue_job_trigger_enable && var.glue_job_enable ? 1 : 0
+
+  name = "${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}"
+  type = upper(var.glue_job_trigger.type)
+
+  description   = var.glue_job_trigger.description
+  enabled       = var.glue_job_trigger.enabled != null ? var.glue_job_trigger.enabled : true
+  schedule      = var.glue_job_trigger.schedule
+  workflow_name = var.glue_job_trigger.workflow_name
+
+  dynamic "actions" {
+    iterator = actions
+    for_each = var.glue_job_trigger.actions != null ? var.glue_job_trigger.actions : [{"arguments": {}, "job_name": element(concat(aws_glue_job.glue_job.*.id, [""]), 0)}]
+
+    content {
+      arguments = lookup(actions.value, "arguments", null)
+      job_name  = lookup(actions.value, "job_name", null)
+      timeout   = lookup(actions.value, "timeout", null)
+    }
+  }
+
+  dynamic "predicate" {
+    iterator = predicate
+    for_each = var.glue_job_trigger.predicate != null ? var.glue_job_trigger.predicate : []
+
+    content {
+      logical = lookup(predicate.value, "logical", null)
+
+      dynamic "conditions" {
+        iterator = conditions
+        for_each = lookup(predicate.value, "conditions", [])
+
+        content {
+          job_name         = lookup(conditions.value, "job_name", null)
+          state            = lookup(conditions.value, "state", null)
+          crawler_name     = lookup(conditions.value, "crawler_name", null)
+          crawl_state      = lookup(conditions.value, "crawl_state", null)
+          logical_operator = lookup(conditions.value, "logical_operator", null)
+        }
+      }
+    }
+  }
+
+  dynamic "timeouts" {
+    iterator = timeouts
+    for_each = var.glue_job_trigger.timeouts != null ? var.glue_job_trigger.timeouts : []
+
+    content {
+      create = lookup(timeouts.value, "create", null)
+      delete = lookup(timeouts.value, "delete", null)
+    }
+  }
+
+  tags = {
+    Managed_By = "terraform"
+    Env        = var.environment
+    Project    = var.project
+    App        = "glue"
+    Name       = "${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = []
+  }
+
+  depends_on = [
+    aws_glue_job.glue_job
+  ]
+}

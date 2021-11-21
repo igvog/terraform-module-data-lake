@@ -49,3 +49,25 @@ variable "glue_job" {
     schedule               = optional(list(string))
   })
 }
+
+
+variable "glue_job_trigger_enable" {
+  description = "Enable Glue job trigger creation"
+  type        = bool
+  default     = false
+}
+
+variable "glue_job_trigger" {
+    description = ""
+    type = object({
+        type = string
+        actions = optional(list(any))
+        enabled = optional(bool)
+        description = optional(string)
+        schedule = optional(string)
+        workflow_name = optional(string)
+        predicate = optional(list(map(string)))
+        timeouts =  optional(list(map(string)))
+    })
+    default = null
+}
