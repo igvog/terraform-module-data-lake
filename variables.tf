@@ -35,7 +35,7 @@ variable "glue_job" {
   description = "Glue job"
   type = object({
     role_arn               = string
-    command                = list(map(string))
+    command                = optional(list(map(string)))
     description            = optional(string)
     version                = optional(string)
     timeout                = optional(number)
@@ -102,5 +102,37 @@ variable "glue_crawler" {
         mongodb_target = optional(list(any))
         lineage_configuration = optional(list(any))
         recrawl_policy = optional(list(any))
+    })
+}
+
+variable "lambda_function_enable" {
+  description = "Enable Lambda function creation"
+  type        = bool
+  default     = false
+}
+
+variable "lambda_function" {
+    description = ""
+    type = object({
+        role = string
+        handler = optional(string)
+        runtime = optional(string)
+        filename = optional(string)
+        s3_bucket = optional(string)
+        s3_key = optional(string)
+        s3_object_version = optional(string)
+        description = optional(string)
+        layers = optional(list(any))
+        memory_size = optional(number)
+        timeout = optional(number)
+        reserved_concurrent_executions = optional(number)
+        publish = optional(bool)
+        kms_key_arn = optional(string)
+        source_code_hash = optional(string)
+        dead_letter_config = optional(list(any))
+        tracing_config = optional(list(any))
+        vpc_config = optional(list(any))
+        environment = optional(map(any))
+        timeouts = optional(list(any))
     })
 }
