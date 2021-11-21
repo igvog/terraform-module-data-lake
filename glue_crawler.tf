@@ -1,5 +1,5 @@
 resource "aws_glue_crawler" "glue_crawler" {
-  count = var.enable_glue_crawler ? 1 : 0
+  count = var.glue_crawler_enable ? 1 : 0
 
   name          = "${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}"
   database_name = var.glue_crawler.database_name
@@ -104,4 +104,5 @@ resource "aws_glue_crawler" "glue_crawler" {
     create_before_destroy = true
     ignore_changes        = []
   }
+
 }
