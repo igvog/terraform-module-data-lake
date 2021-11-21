@@ -14,9 +14,12 @@ variable "name" {
   description = "Project name"
 }
 
+
+
 variable "glue_job_enable" {
   description = "Enable Glue job creation"
   type        = bool
+  default     = false
 }
 
 variable "glue_job_bucket" {
@@ -71,3 +74,33 @@ variable "glue_job_trigger" {
     })
     default = null
 }
+
+
+
+variable "glue_crawler_enable" {
+  description = "Enable Glue crawler creation"
+  type        = bool
+  default     = false
+}
+
+variable "glue_crawler" {
+    description = ""
+    type = object({
+        database_name = string
+        role = string
+        description = optional(string)
+        classifiers = optional(list(any))
+        configuration = optional(string)
+        schedule = optional(string)
+        security_configuration = optional(string)
+        table_prefix = optional(string)
+        dynamodb_target = optional(list(map(string)))
+        jdbc_target = optional(list(map(string)))
+        s3_target = optional(list(map(string)))
+        catalog_target = optional(map(string))
+        schema_change_policy = optional(list(map(string)))
+        mongodb_target = optional(list(map(string)))
+        lineage_configuration = optional(list(map(string)))
+        recrawl_policy = optional(list(map(string)))
+    })
+)
