@@ -30,7 +30,7 @@ resource "aws_lambda_function" "lambda_function" {
   function_name = local.full_name
   role          = var.lambda_function.role
 
-  handler = var.lambda_function.handler != null ? var.lambda_function.handler : "lambda_handler"
+  handler = var.lambda_function.handler != null ? var.lambda_function.handler : "lambda_function.lambda_handler"
   runtime = var.lambda_function.runtime != null ? var.lambda_function.runtime : "python3.9"
 
   filename                       = var.lambda_function.s3_bucket == null ? "${path.module}/files/${local.full_name}.zip" : null
