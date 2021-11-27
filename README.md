@@ -1,5 +1,7 @@
 # Terraform module for AWS Data-Lake CI/CD
 
+Terraform module developed for automation Data Lake AWS services deploy. Data engineers and DevOps/DataOps engineers can easily deploy data workflow CI/CD. Using this module with Terragrunt will help simplify processes.
+
 ## Module Input Variables
 
 ### AWS Glue Job
@@ -22,7 +24,7 @@
 - `connections` (Optional) - The list of connections used for the job. (`default` = [])
 - `default_arguments` (Optional) - The map of default arguments for this job. You can specify arguments here that your own job-execution script consumes, as well as arguments that AWS Glue itself consumes. For information about how to specify and consume your own Job arguments, see the Calling AWS Glue APIs in Python topic in the developer guide. For information about the key-value pairs that AWS Glue consumes to set up your job, see the Special Parameters Used by AWS Glue topic in the developer guide.
 - `glue_version` (Optional) - The version of glue to use, for example '1.0'. For information about available versions, see the AWS Glue Release Notes. (`default` - "1.0")
-- `max_capacity` (Optional) - The maximum number of AWS Glue data processing units (DPUs) that can be allocated when this job runs. **Required** when pythonshell is set, accept either 0.0625 or 1.0. 
+- `max_capacity` (Optional) - The maximum number of AWS Glue data processing units (DPUs) that can be allocated when this job runs. Required when pythonshell is set, accept either 0.0625 or 1.0. 
 - `max_retries` (Optional) - The maximum number of times to retry this job if it fails. (`default` = null)
 - `timeout` (Optional) - The job timeout in minutes. The default is 2880 minutes (48 hours). (`default` = 2880)
 - `security_configuration` (Optional) - The name of the Security Configuration to be associated with the job. (`default` = null)
