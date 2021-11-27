@@ -2,36 +2,34 @@ data "archive_file" "lambda_function_zip" {
   count = var.lambda_function_enable ? 1 : 0
 
   type             = "zip"
-  source_dir      = "${path.module}/../lambda"
+  source_dir       = "${path.module}/../../lambda"
   output_file_mode = "0666"
-  output_path      = var.lambda_function.filename != null ? "${path.module}/files/${var.lambda_function.filename}" : "${path.module}/files/${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}.zip"
+  output_path      = "${path.module}/files/${local.full_name}.zip"
 }
 
 resource "aws_s3_bucket_object" "file_upload" {
-  count = var.lambda_function_enable && (
-      var.lambda_function.s3_bucket != null || 
-      (data.archive_file.lambda_function_zip[0].output_size/1024/1024) > 50
-      ) ? 1 : 0
+  count = (var.lambda_function_enable &&
+  var.lambda_function.s3_bucket != null) ? 1 : 0
 
-  bucket = var.lambda_function.s3_bucket == null && (data.archive_file.lambda_function_zip[0].output_size/1024/1024) > 50 ? "lambda-mara" : null
-  key    = var.lambda_function.s3_key == null && (data.archive_file.lambda_function_zip[0].output_size/1024/1024) > 50 ? "${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}.zip" : null
-  source = var.lambda_function.filename != null ? "${path.module}/files/${var.lambda_function.filename}" : "${path.module}/files/${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}.zip"
-  etag   = var.lambda_function.filename != null ? "${filemd5("${path.module}/files/${var.lambda_function.filename}")}" : "${filemd5("${path.module}/files/${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}.zip")}"
+  bucket = var.lambda_function.s3_bucket
+  key    = "${local.full_name}.zip"
+  source = "${path.module}/files/${local.full_name}.zip"
+  etag   = "${filemd5("${path.module}/files/${local.full_name}.zip")}"
 }
 
 resource "aws_lambda_function" "lambda_function" {
   count = var.lambda_function_enable ? 1 : 0
 
-  function_name = "${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}"
+  function_name = local.full_name
   role          = var.lambda_function.role
 
-  handler       = var.lambda_function.handler != null ? var.lambda_function.handler : "lambda_handler"
-  runtime       = var.lambda_function.runtime != null ? var.lambda_function.runtime : "python3.6"
+  handler = var.lambda_function.handler != null ? var.lambda_function.handler : "lambda_handler"
+  runtime = var.lambda_function.runtime != null ? var.lambda_function.runtime : "python3.9"
 
-  filename                       = var.lambda_function.filename != null ? "${path.module}/files/${var.lambda_function.filename}" : "${path.module}/files/${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}.zip"
-  s3_bucket                      = var.lambda_function.s3_bucket == null && (data.archive_file.lambda_function_zip[0].output_size/1024/1024) > 50 ? "lambda-mara" : null
-  s3_key                         = var.lambda_function.s3_key == null && (data.archive_file.lambda_function_zip[0].output_size/1024/1024) > 50 ? "${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}.zip" : null
-  s3_object_version              = var.lambda_function.s3_object_version
+  filename                       = var.lambda_function.s3_bucket == null ? "${path.module}/files/${local.full_name}.zip" : null
+  s3_bucket                      = var.lambda_function.s3_bucket != null ? var.lambda_function.s3_bucket : null
+  s3_key                         = var.lambda_function.s3_bucket != null ? "${local.full_name}.zip" : null
+  s3_object_version              = var.lambda_function.s3_object_version != null ? var.lambda_function.s3_object_version : null
   description                    = var.lambda_function.description
   layers                         = var.lambda_function.layers
   memory_size                    = var.lambda_function.memory_size
@@ -90,8 +88,8 @@ resource "aws_lambda_function" "lambda_function" {
     Managed_By = "terraform"
     Env        = var.environment
     Project    = var.project
-    App        = "glue"
-    Name       = "${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}"
+    App        = "lambda"
+    Name       = local.full_name
   }
 
   lifecycle {
@@ -99,5 +97,8 @@ resource "aws_lambda_function" "lambda_function" {
     ignore_changes        = []
   }
 
-  depends_on = [data.archive_file.lambda_function_zip]
+  depends_on = [
+    data.archive_file.lambda_function_zip, 
+    aws_s3_bucket_object.file_upload
+  ]
 }
