@@ -117,6 +117,12 @@ variable "lambda_function_enable" {
   default     = false
 }
 
+variable "lambda_function_api_gateway" {
+  description = "Enable lambda integration with API Gateway (Method - POST)"
+  type = bool
+  default = false
+}
+
 variable "lambda_function" {
     description = ""
     type = object({
