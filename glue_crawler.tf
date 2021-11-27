@@ -92,13 +92,13 @@ resource "aws_glue_crawler" "glue_crawler" {
     }
   }
 
-  tags = {
-    Managed_By = "terraform"
-    Env        = var.environment
-    Project    = var.project
-    App        = "glue"
-    Name       = "${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}"
-  }
+  tags = merge(
+    {
+      App = "glue"
+    },
+    local.base_tags,
+    var.tags
+  )
 
   lifecycle {
     create_before_destroy = true

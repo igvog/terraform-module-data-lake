@@ -89,13 +89,13 @@ resource "aws_lambda_function" "lambda_function" {
     }
   }
 
-  tags = {
-    Managed_By = "terraform"
-    Env        = var.environment
-    Project    = var.project
-    App        = "lambda"
-    Name       = local.full_name
-  }
+  tags = merge(
+    {
+      App = "lambda"
+    },
+    local.base_tags,
+    var.tags
+  )
 
   lifecycle {
     create_before_destroy = true

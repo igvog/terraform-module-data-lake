@@ -8,7 +8,6 @@ variable "region" {
   default = "us-east-1"
 }
 
-
 variable "environment" {
   description = "Environment"
 }
@@ -19,6 +18,12 @@ variable "project" {
 
 variable "name" {
   description = "Project name"
+}
+
+variable "tags" {
+  description = "A list of tag blocks. Each element should have keys named key, value, etc."
+  type        = map(string)
+  default     = {}
 }
 
 
