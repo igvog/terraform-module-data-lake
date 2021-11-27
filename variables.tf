@@ -117,10 +117,23 @@ variable "lambda_function_enable" {
   default     = false
 }
 
-variable "lambda_function_api_gateway" {
+variable "lambda_function_api_gateway_enable" {
   description = "Enable lambda integration with API Gateway (Method - POST)"
   type = bool
   default = false
+}
+
+variable "lambda_function_event_rule_enable" {
+  description = "Enable lambda integration with CloudWatch Event Rule for schedulled execution"
+  type = bool
+  default = false
+}
+
+variable "lambda_function_event_rule" {
+  description = "Enable lambda integration with CloudWatch Event Rule for schedulled execution"
+  type = object({
+    schedule_expression = string
+  })
 }
 
 variable "lambda_function" {

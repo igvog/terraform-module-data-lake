@@ -114,7 +114,7 @@ resource "aws_lambda_function" "lambda_function" {
 // API Gateway integration
 //
 resource "aws_api_gateway_rest_api" "lambda_api_gateway_rest_api" {
-  count = var.lambda_function_enable && var.lambda_function_api_gateway ? 1 : 0
+  count = var.lambda_function_enable && var.lambda_function_api_gateway_enable ? 1 : 0
 
   name = "${local.full_name}-lambda"
 
@@ -140,14 +140,14 @@ resource "aws_api_gateway_rest_api" "lambda_api_gateway_rest_api" {
   depends_on = [aws_lambda_function.lambda_function]
 }
 
-resource "aws_lambda_permission" "lambda_permission" {
-  count = var.lambda_function_enable && var.lambda_function_api_gateway ? 1 : 0
+resource "aws_lambda_permission" "lambda_permission_api_gateway" {
+  count = var.lambda_function_enable && var.lambda_function_api_gateway_enable ? 1 : 0
 
   action        = "lambda:InvokeFunction"
   function_name = local.full_name
   principal     = "apigateway.amazonaws.com"
 
-  source_arn   = aws_api_gateway_rest_api.lambda_api_gateway_rest_api[0].arn
+  source_arn   = "${aws_api_gateway_rest_api.lambda_api_gateway_rest_api[0].execution_arn}/*/POST/${var.name}"
   statement_id = "AllowAPIGatewayInvoke"
 
   lifecycle {
@@ -161,10 +161,8 @@ resource "aws_lambda_permission" "lambda_permission" {
   ]
 }
 
-// "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.lambda_api_gateway_rest_api[0].id}/prod/POST/"
-
 resource "aws_api_gateway_resource" "lambda_api_gateway_resource" {
-  count = var.lambda_function_enable && var.lambda_function_api_gateway ? 1 : 0
+  count = var.lambda_function_enable && var.lambda_function_api_gateway_enable ? 1 : 0
 
   rest_api_id = aws_api_gateway_rest_api.lambda_api_gateway_rest_api[0].id
   parent_id   = aws_api_gateway_rest_api.lambda_api_gateway_rest_api[0].root_resource_id
@@ -179,7 +177,7 @@ resource "aws_api_gateway_resource" "lambda_api_gateway_resource" {
 }
 
 resource "aws_api_gateway_method" "lambda_api_gateway_method" {
-  count = var.lambda_function_enable && var.lambda_function_api_gateway ? 1 : 0
+  count = var.lambda_function_enable && var.lambda_function_api_gateway_enable ? 1 : 0
 
   rest_api_id   = aws_api_gateway_rest_api.lambda_api_gateway_rest_api[0].id
   resource_id   = aws_api_gateway_resource.lambda_api_gateway_resource[0].id
@@ -200,7 +198,7 @@ resource "aws_api_gateway_method" "lambda_api_gateway_method" {
 }
 
 resource "aws_api_gateway_method_response" "lambda_api_gateway_method_response" {
-  count = var.lambda_function_enable && var.lambda_function_api_gateway ? 1 : 0
+  count = var.lambda_function_enable && var.lambda_function_api_gateway_enable ? 1 : 0
 
   rest_api_id = aws_api_gateway_rest_api.lambda_api_gateway_rest_api[0].id
   resource_id = aws_api_gateway_resource.lambda_api_gateway_resource[0].id
@@ -224,7 +222,7 @@ resource "aws_api_gateway_method_response" "lambda_api_gateway_method_response" 
 }
 
 resource "aws_api_gateway_integration" "lambda_api_gateway_integration" {
-  count = var.lambda_function_enable && var.lambda_function_api_gateway ? 1 : 0
+  count = var.lambda_function_enable && var.lambda_function_api_gateway_enable ? 1 : 0
 
   rest_api_id = aws_api_gateway_rest_api.lambda_api_gateway_rest_api[0].id
   resource_id = aws_api_gateway_resource.lambda_api_gateway_resource[0].id
@@ -249,7 +247,7 @@ resource "aws_api_gateway_integration" "lambda_api_gateway_integration" {
 
 
 resource "aws_api_gateway_integration_response" "lambda_api_gateway_integration_response" {
-  count = var.lambda_function_enable && var.lambda_function_api_gateway ? 1 : 0
+  count = var.lambda_function_enable && var.lambda_function_api_gateway_enable ? 1 : 0
 
   rest_api_id = aws_api_gateway_rest_api.lambda_api_gateway_rest_api[0].id
   resource_id = aws_api_gateway_resource.lambda_api_gateway_resource[0].id
@@ -276,7 +274,7 @@ resource "aws_api_gateway_integration_response" "lambda_api_gateway_integration_
 
 
 resource "aws_api_gateway_deployment" "lambda_api_gateway_deployment" {
-  count = var.lambda_function_enable && var.lambda_function_api_gateway ? 1 : 0
+  count = var.lambda_function_enable && var.lambda_function_api_gateway_enable ? 1 : 0
 
   rest_api_id = aws_api_gateway_rest_api.lambda_api_gateway_rest_api[0].id
   stage_name  = var.environment
@@ -289,5 +287,68 @@ resource "aws_api_gateway_deployment" "lambda_api_gateway_deployment" {
   depends_on = [
     aws_api_gateway_rest_api.lambda_api_gateway_rest_api,
     aws_api_gateway_integration_response.lambda_api_gateway_integration_response
+  ]
+}
+
+// CloudWatch Event Bridge Integration
+//
+resource "aws_cloudwatch_event_rule" "lambda_cw_event_rule" {
+  count = var.lambda_function_enable && var.lambda_function_event_rule_enable ? 1 : 0
+
+  name        = local.full_name
+  description = "Event Rule for trigger lambda: ${local.full_name}"
+  is_enabled  = true
+
+  schedule_expression = var.lambda_function_event_rule.schedule_expression
+
+  tags = merge(
+    {
+      App = "api-gateway"
+    },
+    local.base_tags,
+    var.tags
+  )
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = []
+  }
+
+  depends_on = [aws_lambda_function.lambda_function]
+}
+
+resource "aws_cloudwatch_event_target" "lambda_cw_event_target" {
+  count = var.lambda_function_enable && var.lambda_function_event_rule_enable ? 1 : 0
+
+  rule      = aws_cloudwatch_event_rule.lambda_cw_event_rule[0].id
+  target_id = local.full_name
+  arn       = aws_lambda_function.lambda_function[0].arn
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = []
+  }
+
+  depends_on = [aws_cloudwatch_event_rule.lambda_cw_event_rule]
+}
+
+resource "aws_lambda_permission" "lambda_permission_event_rule" {
+  count = var.lambda_function_enable && var.lambda_function_api_gateway_enable ? 1 : 0
+
+  action        = "lambda:InvokeFunction"
+  function_name = local.full_name
+  principal     = "events.amazonaws.com"
+
+  source_arn   = aws_cloudwatch_event_rule.lambda_cw_event_rule[0].arn
+  statement_id = "AllowEventRuleInvoke"
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = []
+  }
+
+  depends_on = [
+    aws_lambda_function.lambda_function,
+    aws_cloudwatch_event_rule.lambda_cw_event_rule,
   ]
 }
