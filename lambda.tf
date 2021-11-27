@@ -8,11 +8,13 @@ data "archive_file" "lambda_function_zip" {
 }
 
 data "assert_test" "lambda_size" {
+    count = var.lambda_function_enable ? 1 : 0
+    
     test = (local.lambda_function_zip_size < 50 && var.lambda_function.s3_bucket != null)
     throw = "Lambda ZIP archive size > 50 Mb. Please set 's3_bucket' variable."
 }
 
-resource "aws_s3_bucket_object" "file_upload" {
+resource "aws_s3_bucket_object" "lambda_function_zip_upload" {
   count = (var.lambda_function_enable &&
   var.lambda_function.s3_bucket != null) ? 1 : 0
 
@@ -104,6 +106,6 @@ resource "aws_lambda_function" "lambda_function" {
 
   depends_on = [
     data.archive_file.lambda_function_zip, 
-    aws_s3_bucket_object.file_upload
+    aws_s3_bucket_object.lambda_function_zip_upload
   ]
 }

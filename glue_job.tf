@@ -1,26 +1,35 @@
+resource "aws_s3_bucket_object" "glue_script_upload" {
+  count = var.glue_job_enable ? 1 : 0
+
+  bucket = var.glue_job_s3_bucket
+  key    = "${local.full_name}.py"
+  source = "${path.module}/../../glue_job/${local.full_name}.py"
+  etag   = "${filemd5("${path.module}/../../glue_job/${local.full_name}.py")}"
+}
+
 resource "aws_glue_job" "glue_job" {
   count = var.glue_job_enable ? 1 : 0
 
-  name     = "${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}"
+  name     = local.full_name
   role_arn = var.glue_job.role_arn
 
   description            = var.glue_job.description
   connections            = var.glue_job.connections
   default_arguments      = var.glue_job.default_arguments
-  glue_version           = var.glue_job.version != null ? var.glue_job.version : "2.0"
-  max_capacity           = var.glue_job.version != null && var.glue_job.version == "1.0" ? var.glue_job.max_capacity : null
-  max_retries            = var.glue_job.max_retries != null ? var.glue_job.max_retries : 2
-  timeout                = var.glue_job.timeout != null ? var.glue_job.timeout : 60
+  glue_version           = var.glue_job.version != null ? var.glue_job.version : "1.0"
+  max_capacity           = var.glue_job.max_capacity
+  max_retries            = var.glue_job.max_retries
+  timeout                = var.glue_job.timeout
   security_configuration = var.glue_job.security_configuration
-  worker_type            = var.glue_job.worker_type != null ? var.glue_job.worker_type : "Standard"
-  number_of_workers      = var.glue_job.number_of_workers != null ? var.glue_job.number_of_workers : 2
+  worker_type            = var.glue_job.worker_type
+  number_of_workers      = var.glue_job.number_of_workers
 
   dynamic "command" {
     iterator = command
     for_each = var.glue_job.command != null ? var.glue_job.command : [
       {
         name            = "glueetl",
-        script_location = "s3://${var.glue_job_bucket}/${var.glue_job_bucket_folder}${var.name}.py",
+        script_location = "s3://${var.glue_job_s3_bucket}/${local.full_name}.py",
         python_version  = "3"
       }
     ]
@@ -62,16 +71,15 @@ resource "aws_glue_job" "glue_job" {
     create_before_destroy = true
     ignore_changes        = []
   }
+
+  depends_on = [aws_s3_bucket_object.glue_script_upload]
 }
 
-
-
-
-
+// TODO multiple triggers
 resource "aws_glue_trigger" "glue_job_trigger" {
   count = var.glue_job_trigger_enable && var.glue_job_enable ? 1 : 0
 
-  name = "${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}"
+  name = local.full_name
   type = upper(var.glue_job_trigger.type)
 
   description   = var.glue_job_trigger.description
@@ -122,13 +130,13 @@ resource "aws_glue_trigger" "glue_job_trigger" {
     }
   }
 
-  tags = {
-    Managed_By = "terraform"
-    Env        = var.environment
-    Project    = var.project
-    App        = "glue"
-    Name       = "${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}"
-  }
+  tags = merge(
+    {
+      App = "glue"
+    },
+    local.base_tags,
+    var.tags
+  )
 
   lifecycle {
     create_before_destroy = true
@@ -136,6 +144,7 @@ resource "aws_glue_trigger" "glue_job_trigger" {
   }
 
   depends_on = [
-    aws_glue_job.glue_job
+    aws_glue_job.glue_job,
+    aws_s3_bucket_object.glue_script_upload
   ]
 }

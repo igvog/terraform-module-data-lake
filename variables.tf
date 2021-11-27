@@ -33,13 +33,8 @@ variable "glue_job_enable" {
   default     = false
 }
 
-variable "glue_job_bucket" {
+variable "glue_job_s3_bucket" {
   description = "S3 bucket name for glue job scripts"
-}
-
-variable "glue_job_bucket_folder" {
-  description = "Folder in S3 bucket"
-  default = null
 }
 
 variable "glue_job" {

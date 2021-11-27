@@ -1,7 +1,7 @@
 resource "aws_glue_crawler" "glue_crawler" {
   count = var.glue_crawler_enable ? 1 : 0
 
-  name          = "${lower(var.environment)}-${lower(var.project)}-${lower(var.name)}"
+  name          = local.full_name
   database_name = var.glue_crawler.database_name
   role          = var.glue_crawler.role
 
@@ -44,11 +44,12 @@ resource "aws_glue_crawler" "glue_crawler" {
 
   dynamic "catalog_target" {
     iterator = catalog_target
-    for_each = length(var.glue_crawler.catalog_target) > 0 ? [var.glue_crawler.catalog_target] : []
+    // for_each = length(var.glue_crawler.catalog_target) > 0 ? [var.glue_crawler.catalog_target] : []
+    for_each = var.glue_crawler.catalog_target != null ? [var.glue_crawler.catalog_target] : []
 
     content {
-      database_name = lookup(catalog_target.value, "database_name", element(concat(aws_glue_catalog_database.glue_catalog_database.*.id, [""]), 0))
-      tables        = lookup(catalog_target.value, "tables", element(concat(aws_glue_catalog_table.glue_catalog_table.*.id, [""]), 0))
+      database_name = lookup(catalog_target.value, "database_name", null)
+      tables        = lookup(catalog_target.value, "tables", null)
     }
   }
 
