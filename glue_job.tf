@@ -3,8 +3,8 @@ resource "aws_s3_bucket_object" "glue_script_upload" {
 
   bucket = var.glue_job_s3_bucket
   key    = "${local.full_name}.py"
-  source = "${path.module}/../../glue_job/${local.full_name}.py"
-  etag   = "${filemd5("${path.module}/../../glue_job/${local.full_name}.py")}"
+  source = "${path.module}/../../../glue_job/${local.full_name}.py"
+  etag   = "${filemd5("${path.module}/../../../glue_job/${local.full_name}.py")}"
 }
 
 resource "aws_glue_job" "glue_job" {
