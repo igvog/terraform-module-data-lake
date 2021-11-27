@@ -2,6 +2,13 @@
 # AWS Glue job
 #---------------------------------------------------
 
+variable "region" {
+  description = "AWS Region"
+  type = string
+  default = "us-east-1"
+}
+
+
 variable "environment" {
   description = "Environment"
 }
@@ -13,7 +20,6 @@ variable "project" {
 variable "name" {
   description = "Project name"
 }
-
 
 
 variable "glue_job_enable" {
