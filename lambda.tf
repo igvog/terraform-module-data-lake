@@ -21,7 +21,8 @@ resource "aws_s3_object" "lambda_function_zip_upload" {
   bucket = var.lambda_function.s3_bucket
   key    = "${local.full_name}.zip"
   source = "${path.module}/files/${local.full_name}.zip"
-  etag   = filemd5("${path.module}/files/${local.full_name}.zip")
+#   etag   = filemd5("${path.module}/files/${local.full_name}.zip")
+  source_hash = filemd5("${path.module}/files/${local.full_name}.zip")
 }
 
 resource "aws_lambda_function" "lambda_function" {
