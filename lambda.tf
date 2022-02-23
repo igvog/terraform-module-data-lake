@@ -118,7 +118,7 @@ resource "aws_lambda_function" "lambda_function" {
 
   depends_on = [
     data.archive_file.lambda_function_zip,
-    aws_s3_object.lambda_function_zip_upload
+    null_resource.lambda_function_zip_upload
   ]
 }
 
