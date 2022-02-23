@@ -156,7 +156,7 @@ variable "lambda_function" {
         source_code_hash = optional(string)
         dead_letter_config = optional(list(any))
         tracing_config = optional(list(any))
-        vpc_config = optional(list(any))
+        vpc_config = optional(map(any))
         environment = optional(map(any))
         timeouts = optional(list(any))
     })
