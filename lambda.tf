@@ -14,14 +14,14 @@ data "archive_file" "lambda_function_zip" {
 #   throw = "Lambda ZIP archive size > 50 Mb. Please set 's3_bucket' variable."
 # }
 
-resource "aws_s3_bucket_object" "lambda_function_zip_upload" {
+resource "aws_s3_object" "lambda_function_zip_upload" {
   count = (var.lambda_function_enable &&
   var.lambda_function.s3_bucket != null) ? 1 : 0
 
   bucket = var.lambda_function.s3_bucket
   key    = "${local.full_name}.zip"
   source = "${path.module}/files/${local.full_name}.zip"
-  etag   = "${filemd5("${path.module}/files/${local.full_name}.zip")}"
+  etag   = filemd5("${path.module}/files/${local.full_name}.zip")
 }
 
 resource "aws_lambda_function" "lambda_function" {
@@ -106,7 +106,7 @@ resource "aws_lambda_function" "lambda_function" {
 
   depends_on = [
     data.archive_file.lambda_function_zip,
-    aws_s3_bucket_object.lambda_function_zip_upload
+    aws_s3_object.lambda_function_zip_upload
   ]
 }
 
