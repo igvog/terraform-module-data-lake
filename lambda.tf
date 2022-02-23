@@ -7,12 +7,12 @@ data "archive_file" "lambda_function_zip" {
   output_path      = "${path.module}/files/${local.full_name}.zip"
 }
 
-data "assert_test" "lambda_size" {
-  count = var.lambda_function_enable ? 1 : 0
+# data "assert_test" "lambda_size" {
+#   count = var.lambda_function_enable ? 1 : 0
 
-  test  = (local.lambda_function_zip_size < 50 && var.lambda_function.s3_bucket != null)
-  throw = "Lambda ZIP archive size > 50 Mb. Please set 's3_bucket' variable."
-}
+#   test  = (local.lambda_function_zip_size < 50 && var.lambda_function.s3_bucket != null)
+#   throw = "Lambda ZIP archive size > 50 Mb. Please set 's3_bucket' variable."
+# }
 
 resource "aws_s3_bucket_object" "lambda_function_zip_upload" {
   count = (var.lambda_function_enable &&
