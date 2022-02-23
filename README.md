@@ -138,6 +138,19 @@ lambda_function = {
 }
 ```
 
+## Example with VPC
+
+```
+lambda_function_enable = true
+lambda_function = {
+    role = "arn:aws:iam::xxxxxxx:role/xxxxxx"
+    vpc_config = [{
+        subnet_ids = ["subnet-xxx", "subnet-xxx", "subnet-xxx"]
+        security_group_ids = ["sg-xxxxxx"]
+    }]
+}
+```
+
 
 ## AWS Lambda Integration with AWS API Gateway
 
