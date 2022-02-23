@@ -13,7 +13,7 @@ Terraform module developed for automation Data Lake AWS services deploy. Data en
 ```
     command = [
         {
-	        name = "glueetl",
+	    name = "glueetl",
             script_location = "s3://project-glue-scripts/env-project-name.py",
             python_version = "3"
         }
