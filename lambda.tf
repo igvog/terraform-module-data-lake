@@ -14,15 +14,26 @@ data "archive_file" "lambda_function_zip" {
 #   throw = "Lambda ZIP archive size > 50 Mb. Please set 's3_bucket' variable."
 # }
 
-resource "aws_s3_object" "lambda_function_zip_upload" {
-  count = (var.lambda_function_enable &&
-  var.lambda_function.s3_bucket != null) ? 1 : 0
+# resource "aws_s3_object" "lambda_function_zip_upload" {
+#   count = (var.lambda_function_enable &&
+#   var.lambda_function.s3_bucket != null) ? 1 : 0
 
-  bucket = var.lambda_function.s3_bucket
-  key    = "${local.full_name}.zip"
-  source = "${path.module}/files/${local.full_name}.zip"
-#   etag   = filemd5("${path.module}/files/${local.full_name}.zip")
-  source_hash = filemd5("${path.module}/files/${local.full_name}.zip")
+#   bucket = var.lambda_function.s3_bucket
+#   key    = "${local.full_name}.zip"
+#   source = "${path.module}/files/${local.full_name}.zip"
+# #   etag   = filemd5("${path.module}/files/${local.full_name}.zip")
+#   source_hash = filemd5("${path.module}/files/${local.full_name}.zip")
+# }
+
+resource "null_resource" "lambda_function_zip_upload" {
+  
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+
+  provisioner "local-exec" {
+    command = "aws s3 cp ${path.module}/files/${local.full_name}.zip s3://${var.lambda_function.s3_bucket}/"
+    }
 }
 
 resource "aws_lambda_function" "lambda_function" {
