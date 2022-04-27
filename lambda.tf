@@ -8,7 +8,7 @@ data "archive_file" "lambda_function_zip" {
 }
 
 resource "null_resource" "lambda_function_zip_upload" {
-  
+  count = var.lambda_function_enable ? 1 : 0
   triggers = {
     always_run = "${timestamp()}"
   }
