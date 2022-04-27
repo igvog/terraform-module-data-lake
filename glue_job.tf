@@ -145,6 +145,6 @@ resource "aws_glue_trigger" "glue_job_trigger" {
 
   depends_on = [
     aws_glue_job.glue_job,
-    aws_s3_bucket_object.glue_script_upload
+    aws_s3_object.glue_script_upload
   ]
 }
