@@ -72,7 +72,7 @@ resource "aws_glue_job" "glue_job" {
     ignore_changes        = []
   }
 
-  depends_on = [aws_s3_bucket_object.glue_script_upload]
+  depends_on = [aws_s3_object.glue_script_upload]
 }
 
 // TODO multiple triggers
