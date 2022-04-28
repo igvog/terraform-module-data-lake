@@ -34,6 +34,7 @@ resource "aws_glue_job" "glue_job" {
     "--extra-jars"                       = "s3://technodom-prod-data-lake-s3-glue-libs/delta-core_2.12-1.0.0.jar"
     "--user-jars-first"                  = "true"
     "--enable-spark-ui"                  = "true"
+    "--enable-glue-datacatalog"          = "true"  
   }
 
 
