@@ -35,7 +35,7 @@ resource "aws_glue_job" "glue_job" {
     "--user-jars-first"                  = "true"
     "--enable-spark-ui"                  = "true"
   }
-}
+
 
   dynamic "command" {
     iterator = command
