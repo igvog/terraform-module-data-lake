@@ -56,6 +56,7 @@ variable "glue_job" {
     security_configuration = optional(string)
     default_arguments      = optional(map(string))
     schedule               = optional(list(string))
+    extra_jars             = optional(string)
   })
 }
 
