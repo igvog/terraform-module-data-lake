@@ -2,7 +2,7 @@ data "archive_file" "lambda_function_zip" {
   count = var.lambda_function_enable ? 1 : 0
 
   type             = "zip"
-  source_file       = "${path.module}/../../../lambda/*"
+  source_dir       = "${path.module}/../../../lambda/"
   output_file_mode = "0666"
   output_path      = "${path.module}/files/${local.full_name}.zip"
 }
