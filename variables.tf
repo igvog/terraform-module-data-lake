@@ -58,6 +58,7 @@ variable "glue_job" {
     schedule               = optional(list(string))
     extra_jars             = optional(string)
     extra_py_files         = optional(string)
+    additional_python_modules = optional(string)
   })
 }
 
