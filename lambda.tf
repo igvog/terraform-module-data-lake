@@ -327,7 +327,7 @@ resource "aws_cloudwatch_event_target" "lambda_cw_event_target" {
 }
 
 resource "aws_lambda_permission" "lambda_permission_event_rule" {
-  count = var.lambda_function_enable && var.lambda_function_api_gateway_enable ? 1 : 0
+  count = var.lambda_function_enable && var.lambda_function_event_rule_enable  ? 1 : 0
 
   action        = "lambda:InvokeFunction"
   function_name = local.full_name
