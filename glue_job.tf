@@ -26,9 +26,9 @@ resource "aws_glue_job" "glue_job" {
   
   default_arguments = {
     # ... potentially other arguments ...
-    "--enable-continuous-cloudwatch-log" = "true"
-    "--enable-continuous-log-filter"     = "true"
-    "--enable-metrics"                   = "true"
+    "--enable-continuous-cloudwatch-log" = var.glue_job.enable_log
+    "--enable-continuous-log-filter"     = var.glue_job.log_filter
+    "--enable-metrics"                   = var.glue_job.enable_metrics
     "--TempDir"                          = "s3://aws-glue-assets-313555887466-eu-north-1/temporary/" 
     "--extra-py-files"                   = var.glue_job.extra_py_files
     "--extra-jars"                       = var.glue_job.extra_jars
