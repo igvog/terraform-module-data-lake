@@ -62,6 +62,21 @@ variable "glue_job" {
   })
 }
 
+variable "glue_job_enable_log" {
+  description = "Enable Glue job cloudwatch logs"
+  type        = bool
+  default     = true
+}
+variable "glue_job_log_filter" {
+  description = "Enable Glue job to filter logs"
+  type        = bool
+  default     = true
+}
+variable "glue_job_enable_metrics" {
+  description = "Enable Glue job enable metrics"
+  type        = bool
+  default     = true
+}
 
 variable "glue_job_trigger_enable" {
   description = "Enable Glue job trigger creation"
