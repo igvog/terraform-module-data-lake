@@ -120,7 +120,7 @@ variable "glue_crawler" {
         table_prefix = optional(string)
         dynamodb_target = optional(list(any))
         jdbc_target = optional(list(map(string)))
-        delta_target = optional(list(map(string)))
+        delta_target = optional(list(map(any)))
         s3_target = optional(list(any))
         catalog_target = optional(map(string))
         schema_change_policy = optional(list(any))
