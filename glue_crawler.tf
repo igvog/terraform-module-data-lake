@@ -23,7 +23,7 @@ resource "aws_glue_crawler" "glue_crawler" {
   
   dynamic "delta_target" {
     iterator = delta_target
-    for_each = var.var.glue_crawler.delta_target != null ? var.glue_crawler.delta_target : []
+    for_each = var.glue_crawler.delta_target != null ? var.glue_crawler.delta_target : []
   
     content {
       connection_name = lookup(delta_target.value, "connection_name", null)
