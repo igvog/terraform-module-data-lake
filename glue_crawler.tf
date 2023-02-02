@@ -21,7 +21,7 @@ resource "aws_glue_crawler" "glue_crawler" {
     }
   }
   
-  dynamic "delta_target"
+  dynamic "delta_target" {
     iterator = delta_target
     for_each = var.var.glue_crawler.delta_target != null ? var.glue_crawler.delta_target : []
   
@@ -30,6 +30,7 @@ resource "aws_glue_crawler" "glue_crawler" {
       delta_tables    = lookup(delta_target.value, "delta_tables", null)
       write_manifest  = lookup(delta_target.value, "write_manifest", null)
     }
+  }
 
   dynamic "jdbc_target" {
     iterator = jdbc_target
