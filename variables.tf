@@ -180,6 +180,12 @@ variable "lambda_function" {
         timeouts = optional(list(any))
     })
 }
+
+variable "create_lambda_function_url " {
+  description = "Enable lambda function url"
+  type = bool
+  default = false
+}
 variable "create_unqualified_alias_lambda_function_url" {
   description = "Whether to use unqualified alias pointing to $LATEST version in Lambda Function URL"
   type        = bool
