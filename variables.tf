@@ -181,7 +181,7 @@ variable "lambda_function" {
     })
 }
 
-variable "create_lambda_function_url " {
+variable "create_lambda_function_url" {
   description = "Enable lambda function url"
   type = bool
   default = false
