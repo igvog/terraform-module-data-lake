@@ -367,12 +367,12 @@ resource "aws_lambda_function_url" "lambda_function_uri" {
     for_each = var.lambda_function_url.cors != null ? var.lambda_function_url.cors : []
 
     content {
-      allow_credentials = var.lambda_function_url.allow_credentials
-      allow_headers     = var.lambda_function_url.allow_headers
-      allow_methods     = var.lambda_function_url.allow_methods
-      allow_origins     = var.lambda_function_url.allow_origins
-      expose_headers    = var.lambda_function_url.expose_headers 
-      max_age           = var.lambda_function_url.max_age   
+      allow_credentials = var.lambda_function.allow_credentials
+      allow_headers     = var.lambda_function.allow_headers
+      allow_methods     = var.lambda_function.allow_methods
+      allow_origins     = var.lambda_function.allow_origins
+      expose_headers    = var.lambda_function.expose_headers 
+      max_age           = var.lambda_function.max_age   
     }
   }
 }
