@@ -178,6 +178,12 @@ variable "lambda_function" {
         vpc_config = optional(list(any))
         environment = optional(map(any))
         timeouts = optional(list(any))
+        allow_credentials = optional(bool)
+        allow_headers = optional(list(any))
+        allow_methods = optional(list(any))
+        allow_origins = optional(list(any))
+        expose_headers = optional(any)
+        max_age = optional(number)
     })
 }
 
@@ -204,14 +210,4 @@ variable "cors" {
   default     = {}
 }
 
-variable "lambda_function_url" {
-    description = ""
-    type = object({
-        allow_credentials = optional(bool)
-        allow_headers = optional(list(any))
-        allow_methods = optional(list(any))
-        allow_origins = optional(list(any))
-        expose_headers = optional(any)
-        max_age = optional(number)
-    })
 }
