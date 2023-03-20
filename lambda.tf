@@ -348,13 +348,20 @@ resource "aws_lambda_permission" "lambda_permission_event_rule" {
 }
 
 resource "aws_lambda_function_url" "lambda_function_uri" {
-  count = var.lambda_function_enable && var.create_lambda_function_url ? 1 : 0
+  count = var.lambda_function_enable && var.lambda_function_url ? 1 : 0
 
   function_name = local.full_name
 
   # Error: error creating Lambda Function URL: ValidationException
   qualifier          = var.create_unqualified_alias_lambda_function_url ? null : aws_lambda_function.lambda_function[0].version
   authorization_type = var.authorization_type
+  
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = []
+  }
+  
+  depends_on = [aws_lambda_function.lambda_function]
 
   dynamic "cors" {
     for_each = length(keys(var.cors)) == 0 ? [] : [var.cors]
