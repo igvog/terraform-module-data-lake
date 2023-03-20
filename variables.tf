@@ -203,3 +203,15 @@ variable "cors" {
   type        = any
   default     = {}
 }
+
+variable "lambda_function_url" {
+    description = ""
+    type = object({
+        allow_credentials = optional(bool)
+        allow_headers = optional(list(any))
+        allow_methods = optional(list(any))
+        allow_origins = optional(list(any))
+        expose_headers = optional(any)
+        max_age = optional(number)
+    })
+}
