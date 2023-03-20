@@ -181,7 +181,7 @@ variable "lambda_function" {
     })
 }
 
-variable "lambda_function_url" {
+variable "lambda_function_url_enable" {
   description = "Enable lambda function url"
   type = bool
   default = false
