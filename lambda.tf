@@ -364,15 +364,15 @@ resource "aws_lambda_function_url" "lambda_function_uri" {
   depends_on = [aws_lambda_function.lambda_function]
 
   dynamic "cors" {
-    for_each = length(keys(var.cors)) == 0 ? [] : [var.cors]
+    for_each = var.lambda_function_url.cors != null ? var.lambda_function_url.cors : []
 
     content {
-      allow_credentials = try(cors.value.allow_credentials, null)
-      allow_headers     = try(cors.value.allow_headers, null)
-      allow_methods     = try(cors.value.allow_methods, null)
-      allow_origins     = try(cors.value.allow_origins, null)
-      expose_headers    = try(cors.value.expose_headers, null)
-      max_age           = try(cors.value.max_age, null)
+      allow_credentials = var.lambda_function_url.allow_credentials
+      allow_headers     = var.lambda_function_url.allow_headers
+      allow_methods     = var.lambda_function_url.allow_methods
+      allow_origins     = var.lambda_function_url.allow_origins
+      expose_headers    = var.lambda_function_url.expose_headers 
+      max_age           = var.lambda_function_url.max_age   
     }
   }
 }
