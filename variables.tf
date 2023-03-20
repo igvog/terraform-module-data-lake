@@ -210,4 +210,4 @@ variable "cors" {
   default     = {}
 }
 
-}
+
