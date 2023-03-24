@@ -375,4 +375,4 @@ resource "aws_lambda_permission" "lambda_permission_event_rule" {
 #       max_age           = var.lambda_function.max_age   
 #     }
 #   }
-}
+#}
