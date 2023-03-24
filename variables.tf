@@ -178,48 +178,42 @@ variable "lambda_function" {
         vpc_config = optional(list(any))
         environment = optional(map(any))
         timeouts = optional(list(any))
-        allow_credentials = optional(bool)
-        allow_headers = optional(list(any))
-        allow_methods = optional(list(any))
-        allow_origins = optional(list(any))
-        expose_headers = optional(any)
-        max_age = optional(number)
     })
 }
 
-variable "lambda_function_url_enable" {
-  description = "Enable lambda function url"
-  type = bool
-  default = false
-}
-variable "create_unqualified_alias_lambda_function_url" {
-  description = "Whether to use unqualified alias pointing to $LATEST version in Lambda Function URL"
-  type        = bool
-  default     = true
-}
+# variable "lambda_function_url_enable" {
+#   description = "Enable lambda function url"
+#   type = bool
+#   default = false
+# }
+# variable "create_unqualified_alias_lambda_function_url" {
+#   description = "Whether to use unqualified alias pointing to $LATEST version in Lambda Function URL"
+#   type        = bool
+#   default     = true
+# }
 
-variable "authorization_type" {
-  description = "The type of authentication that the Lambda Function URL uses. Set to 'AWS_IAM' to restrict access to authenticated IAM users only. Set to 'NONE' to bypass IAM authentication and create a public endpoint."
-  type        = string
-  default     = "NONE"
-}
+# variable "authorization_type" {
+#   description = "The type of authentication that the Lambda Function URL uses. Set to 'AWS_IAM' to restrict access to authenticated IAM users only. Set to 'NONE' to bypass IAM authentication and create a public endpoint."
+#   type        = string
+#   default     = "NONE"
+# }
 
-variable "cors" {
-  description = "CORS settings to be used by the Lambda Function URL"
-  type        = any
-  default     = {}
-}
+# variable "cors" {
+#   description = "CORS settings to be used by the Lambda Function URL"
+#   type        = any
+#   default     = {}
+# }
 
-variable "lambda_function_url" {
-    description = ""
-    type = object({
-        allow_credentials = optional(bool)
-        allow_headers = optional(list(any))
-        allow_methods = optional(list(any))
-        allow_origins = optional(list(any))
-        expose_headers = optional(any)
-        max_age = optional(number)
-    })
-}
+# variable "lambda_function_url" {
+#     description = ""
+#     type = object({
+#         allow_credentials = optional(bool)
+#         allow_headers = optional(list(any))
+#         allow_methods = optional(list(any))
+#         allow_origins = optional(list(any))
+#         expose_headers = optional(any)
+#         max_age = optional(number)
+#     })
+# }
 
 
