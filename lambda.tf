@@ -348,7 +348,7 @@ resource "aws_lambda_permission" "lambda_permission_event_rule" {
 }
 
 resource "aws_lambda_function_url" "lambda_function_uri" {
-  count = var.lambda_function_enable && var.create_lambda_function_url ? 1 : 0
+  count = var.lambda_function_enable && var.lambda_function_url_enable ? 1 : 0
 
   function_name = local.full_name
 
