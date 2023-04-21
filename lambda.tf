@@ -347,32 +347,32 @@ resource "aws_lambda_permission" "lambda_permission_event_rule" {
   ]
 }
 
-# resource "aws_lambda_function_url" "lambda_function_uri" {
-#   count = var.lambda_function_enable && var.lambda_function_url_enable ? 1 : 0
+ resource "aws_lambda_function_url" "lambda_function_uri" {
+   count = var.lambda_function_enable && var.lambda_function_url_enable ? 1 : 0
 
-#   function_name = local.full_name
+   function_name = local.full_name
 
-#   # Error: error creating Lambda Function URL: ValidationException
-#   qualifier          = var.create_unqualified_alias_lambda_function_url ? null : aws_lambda_function.lambda_function[0].version
-#   authorization_type = var.authorization_type
-#   
-#   lifecycle {
-#     create_before_destroy = true
-#     ignore_changes        = []
-#   }
-#   
-#   depends_on = [aws_lambda_function.lambda_function]
+   # Error: error creating Lambda Function URL: ValidationException
+   qualifier          = var.create_unqualified_alias_lambda_function_url ? null : aws_lambda_function.lambda_function[0].version
+   authorization_type = var.authorization_type
 
-#   dynamic "cors" {
-#     for_each = var.lambda_function_url.cors != null ? var.lambda_function_url.cors : []
+   lifecycle {
+     create_before_destroy = true
+     ignore_changes        = []
+   }
 
-#     content {
-#       allow_credentials = var.lambda_function.allow_credentials
-#       allow_headers     = var.lambda_function.allow_headers
-#       allow_methods     = var.lambda_function.allow_methods
-#       allow_origins     = var.lambda_function.allow_origins
-#       expose_headers    = var.lambda_function.expose_headers 
-#       max_age           = var.lambda_function.max_age   
-#     }
-#   }
-#}
+   depends_on = [aws_lambda_function.lambda_function]
+
+   dynamic "cors" {
+     for_each = var.lambda_function_url.cors != null ? var.lambda_function_url.cors : []
+
+     content {
+       allow_credentials = var.lambda_function.allow_credentials
+       allow_headers     = var.lambda_function.allow_headers
+       allow_methods     = var.lambda_function.allow_methods
+       allow_origins     = var.lambda_function.allow_origins
+       expose_headers    = var.lambda_function.expose_headers
+       max_age           = var.lambda_function.max_age
+     }
+   }
+}
