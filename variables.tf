@@ -198,11 +198,11 @@ variable "lambda_function" {
    default     = "NONE"
  }
 
- variable "cors" {
-   description = "CORS settings to be used by the Lambda Function URL"
-   type        = any
-   default     = {}
- }
+ # variable "cors" {
+ #  description = "CORS settings to be used by the Lambda Function URL"
+ #  type        = any
+ #  default     = {}
+ #}
 
  variable "lambda_function_url" {
      description = ""
