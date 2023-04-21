@@ -356,16 +356,24 @@ resource "aws_lambda_function_url" "lambda_function_uri" {
   qualifier          = var.create_unqualified_alias_lambda_function_url ? null : aws_lambda_function.lambda_function[0].version
   authorization_type = var.authorization_type
 
-  dynamic "cors" {
-    for_each = length(keys(var.cors)) == 0 ? [] : [var.cors]
-
-    content {
-      allow_credentials = try(cors.value.allow_credentials, null)
-      allow_headers     = try(cors.value.allow_headers, null)
-      allow_methods     = try(cors.value.allow_methods, null)
-      allow_origins     = try(cors.value.allow_origins, null)
-      expose_headers    = try(cors.value.expose_headers, null)
-      max_age           = try(cors.value.max_age, null)
-    }
+  cors {
+    allow_credentials = false
+    allow_origins     = ["*"]
+    allow_methods     = ["*"]
+    allow_headers     = ["date", "keep-alive"]
+    expose_headers    = ["keep-alive", "date"]
+    max_age           = 86400
   }
+  #dynamic "cors" {
+  #  for_each = length(keys(var.cors)) == 0 ? [] : [var.cors]
+  #
+  #  content {
+  #    allow_credentials = try(cors.value.allow_credentials, null)
+  #    allow_headers     = try(cors.value.allow_headers, null)
+  #    allow_methods     = try(cors.value.allow_methods, null)
+  #    allow_origins     = try(cors.value.allow_origins, null)
+  #    expose_headers    = try(cors.value.expose_headers, null)
+  #    max_age           = try(cors.value.max_age, null)
+  #  }
+  #}
 }
