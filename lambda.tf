@@ -363,8 +363,8 @@ resource "aws_lambda_permission" "lambda_permission_event_rule" {
 
    depends_on = [aws_lambda_function.lambda_function]
 
-#   dynamic "cors" {
-#     for_each = var.lambda_function_url.cors != null ? var.lambda_function_url.cors : []
+   dynamic "cors" {
+     for_each = var.lambda_function_url.cors != null ? var.lambda_function_url.cors : []
 
      content {
        allow_credentials = var.lambda_function.allow_credentials
