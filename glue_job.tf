@@ -2,9 +2,9 @@ resource "aws_s3_object" "glue_script_upload" {
   count = var.glue_job_enable ? 1 : 0
 
   bucket = var.glue_job_s3_bucket
-  key    = "${local.full_name}.py"
-  source = "${path.module}/../../../glue_job/job.py"
-  etag   = "${filemd5("${path.module}/../../../glue_job/job.py")}"
+  key    = "${local.full_name}.scala"
+  source = "${path.module}/../../../glue_job/job.scala"
+  etag   = "${filemd5("${path.module}/../../../glue_job/job.scala")}"
 }
 
 resource "aws_glue_job" "glue_job" {
@@ -23,6 +23,7 @@ resource "aws_glue_job" "glue_job" {
   security_configuration = var.glue_job.security_configuration
   worker_type            = var.glue_job.worker_type
   number_of_workers      = var.glue_job.number_of_workers
+  job_language           = var.glue_job.job_language
   
   default_arguments = {
     # ... potentially other arguments ...
@@ -38,6 +39,7 @@ resource "aws_glue_job" "glue_job" {
     "--enable-glue-datacatalog"          = "true"  
     "--job-bookmark-option"              = "job-bookmark-disable"
     "--additional-python-modules"        = var.glue_job.additional_python_modules
+    "--job-language"                     = var.glue_job.job_language
   }
 
 
@@ -46,8 +48,8 @@ resource "aws_glue_job" "glue_job" {
     for_each = var.glue_job.command != null ? var.glue_job.command : [
       {
         name            = "glueetl",
-        script_location = "s3://${var.glue_job_s3_bucket}/${local.full_name}.py",
-        python_version  = "3"
+        script_location = "s3://${var.glue_job_s3_bucket}/${local.full_name}.scala"
+        #python_version  = "3.9"
       }
     ]
 
