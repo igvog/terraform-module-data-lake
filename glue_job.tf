@@ -23,8 +23,7 @@ resource "aws_glue_job" "glue_job" {
   security_configuration = var.glue_job.security_configuration
   worker_type            = var.glue_job.worker_type
   number_of_workers      = var.glue_job.number_of_workers
-  job_language           = var.glue_job.job_language
-  
+
   default_arguments = {
     # ... potentially other arguments ...
     "--enable-continuous-cloudwatch-log" = var.glue_job_enable_log
@@ -39,7 +38,7 @@ resource "aws_glue_job" "glue_job" {
     "--enable-glue-datacatalog"          = "true"  
     "--job-bookmark-option"              = "job-bookmark-disable"
     "--additional-python-modules"        = var.glue_job.additional_python_modules
-    "--job-language"                     = var.glue_job.job_language
+    "--job-language"                     = "scala"
   }
 
 
