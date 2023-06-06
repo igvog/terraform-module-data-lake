@@ -48,7 +48,7 @@ resource "aws_glue_job" "glue_job" {
       {
         name            = "glueetl",
         script_location = "s3://${var.glue_job_s3_bucket}/${local.full_name}.scala"
-        #python_version  = "3.9"
+        python_version  = "3"
       }
     ]
 
