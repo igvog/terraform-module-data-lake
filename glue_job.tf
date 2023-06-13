@@ -39,6 +39,7 @@ resource "aws_glue_job" "glue_job" {
     "--job-bookmark-option"              = "job-bookmark-disable"
     "--additional-python-modules"        = var.glue_job.additional_python_modules
     "--job-language"                     = "scala"
+    "--class"                            = "GlueApp"
   }
 
 
