@@ -19,7 +19,7 @@ resource "null_resource" "lambda_function_zip_upload" {
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  # count = var.lambda_function_enable ? 1 : 0
+  count = 1 #? 1 : 0
 
   function_name = local.full_name
   role          = var.lambda_function.role
