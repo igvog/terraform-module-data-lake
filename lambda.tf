@@ -19,7 +19,7 @@ resource "null_resource" "lambda_function_zip_upload" {
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  count = 1 #? 1 : 0
+  count = var.lambda_function_enable ? 1 : 0
 
   function_name = local.full_name
   role          = var.lambda_function.role
@@ -382,6 +382,7 @@ resource "aws_lambda_function_url" "lambda_function_uri" {
 # Adding S3 bucket as trigger to my lambda and giving the permissions
 ##################
 resource "aws_s3_bucket_notification" "aws-lambda-trigger" {
+  count = var.lambda_function_enable && var.lambda_function_s3_trigger_enable ? 1 : 0
   bucket = var.lambda_function.s3_bucket #"${aws_s3_bucket.bucket.id}"
   lambda_function {
   lambda_function_arn = aws_lambda_function.lambda_function.arn

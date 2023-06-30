@@ -205,4 +205,8 @@ variable "cors" {
   default     = {}
 }
 
-
+variable "lambda_function_s3_trigger_enable" {
+  description = "Enable lambda function trigger"
+  type = bool
+  default = false
+}
