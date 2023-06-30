@@ -385,7 +385,7 @@ resource "aws_s3_bucket_notification" "aws-lambda-trigger" {
   count = var.lambda_function_enable && var.lambda_function_s3_trigger_enable ? 1 : 0
   bucket = var.lambda_function.s3_bucket #"${aws_s3_bucket.bucket.id}"
   lambda_function {
-  lambda_function_arn = "${aws_lambda_function.lambda_function.arn}" #aws_lambda_function.lambda_function.arn
+  lambda_function_arn = "arn:aws:lambda:eu-north-1:313555887466:function:prod-technodom-test-env" #aws_lambda_function.lambda_function.arn
   events              = ["s3:ObjectCreated:*"]
   filter_prefix       = "file-prefix"
   filter_suffix       = "file-extension"
