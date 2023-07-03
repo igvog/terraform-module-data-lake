@@ -390,11 +390,12 @@ resource "aws_s3_bucket_notification" "aws-lambda-trigger" {
   filter_prefix       = var.lambda_function_s3_trigger.trigger_s3_filter_prefix
   filter_suffix       = var.lambda_function_s3_trigger.trigger_s3_filter_suffix
   }
+  depends_on = [aws_lambda_permission.allow_bucket]
 }
-resource "aws_lambda_permission" "test" {
-  statement_id  = "AllowS3Invoke"
+resource "aws_lambda_permission" "allow_bucket" {
+  statement_id  = "AllowExecutionFromS3Bucket" #"AllowS3Invoke"
   action        = "lambda:InvokeFunction"
-  function_name = local.full_name
+  function_name = "arn:aws:lambda:eu-north-1:313555887466:function:${local.full_name}"
   principal = "s3.amazonaws.com"
   source_arn = "arn:aws:s3:::${var.lambda_function_s3_trigger.trigger_s3_bucket}"
 }
