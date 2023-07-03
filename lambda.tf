@@ -381,6 +381,15 @@ resource "aws_lambda_function_url" "lambda_function_uri" {
 ##################
 # Adding S3 bucket as trigger to my lambda and giving the permissions
 ##################
+
+resource "aws_lambda_permission" "allow_bucket" {
+  statement_id  = "AllowExecutionFromS3Bucket" #"AllowS3Invoke"
+  action        = "lambda:InvokeFunction"
+  function_name = "arn:aws:lambda:eu-north-1:313555887466:function:${local.full_name}"
+  principal = "s3.amazonaws.com"
+  source_arn = "arn:aws:s3:::${var.lambda_function_s3_trigger.trigger_s3_bucket}"
+}
+
 resource "aws_s3_bucket_notification" "aws-lambda-trigger" {
   count = var.lambda_function_enable && var.lambda_function_s3_trigger_enable ? 1 : 0
   bucket = var.lambda_function_s3_trigger.trigger_s3_bucket
@@ -391,11 +400,4 @@ resource "aws_s3_bucket_notification" "aws-lambda-trigger" {
   filter_suffix       = var.lambda_function_s3_trigger.trigger_s3_filter_suffix
   }
   depends_on = [aws_lambda_permission.allow_bucket]
-}
-resource "aws_lambda_permission" "allow_bucket" {
-  statement_id  = "AllowExecutionFromS3Bucket" #"AllowS3Invoke"
-  action        = "lambda:InvokeFunction"
-  function_name = "arn:aws:lambda:eu-north-1:313555887466:function:${local.full_name}"
-  principal = "s3.amazonaws.com"
-  source_arn = "arn:aws:s3:::${var.lambda_function_s3_trigger.trigger_s3_bucket}"
 }
