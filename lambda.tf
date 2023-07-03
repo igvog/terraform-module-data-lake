@@ -383,7 +383,7 @@ resource "aws_lambda_function_url" "lambda_function_uri" {
 ##################
 
 resource "aws_lambda_permission" "allow_bucket" {
-  statement_id  = "AllowExecutionFromS3Bucket" #"AllowS3Invoke"
+  statement_id  = "AllowS3Invoke" #"AllowS3Invoke"
   action        = "lambda:InvokeFunction"
   function_name = "arn:aws:lambda:eu-north-1:313555887466:function:${local.full_name}"
   principal = "s3.amazonaws.com"
