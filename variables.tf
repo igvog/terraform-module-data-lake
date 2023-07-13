@@ -213,7 +213,6 @@ variable "lambda_function_s3_trigger_enable" {
 
 variable "lambda_function_s3_trigger" {
   description = "Enable lambda function s3 trigger"
-  default = ""
     type = object({
         trigger_s3_filter_suffix = optional(string)
         trigger_s3_filter_prefix = optional(string)
