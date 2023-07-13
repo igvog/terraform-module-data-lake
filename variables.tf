@@ -217,7 +217,7 @@ variable "lambda_function_s3_trigger" {
     trigger_s3_filter_suffix = ""
     trigger_s3_filter_prefix = ""
     trigger_s3_events = []
-    trigger_s3_bucket = ""
+    trigger_s3_bucket = "technodom-prod-data-lake-s3-lambda"
   }
     type = object({
         trigger_s3_filter_suffix = optional(string)
