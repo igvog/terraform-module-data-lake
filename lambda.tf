@@ -383,6 +383,7 @@ resource "aws_lambda_function_url" "lambda_function_uri" {
 ##################
 
 resource "aws_lambda_permission" "allow_bucket" {
+  count = var.lambda_function_enable && var.lambda_function_s3_trigger_enable ? 1 : 0
   statement_id  = "AllowS3Invoke" #"AllowS3Invoke"
   action        = "lambda:InvokeFunction"
   function_name = "arn:aws:lambda:eu-north-1:313555887466:function:${local.full_name}"
