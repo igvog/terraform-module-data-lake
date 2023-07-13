@@ -205,26 +205,26 @@ variable "cors" {
   default     = {}
 }
 
-variable "lambda_function_s3_trigger_enable" {
-  description = "Enable lambda function trigger"
-  type = bool
-  default = false
-}
+#variable "lambda_function_s3_trigger_enable" {
+#  description = "Enable lambda function trigger"
+#  type = bool
+#  default = false
+#}
 
-variable "lambda_function_s3_trigger" {
-  description = "Enable lambda function s3 trigger"
-  default = {
-    trigger_s3_filter_suffix = ""
-    trigger_s3_filter_prefix = ""
-    trigger_s3_events = []
-    trigger_s3_bucket = "technodom-prod-data-lake-s3-lambda"
-  }
-    type = object({
-        trigger_s3_filter_suffix = optional(string)
-        trigger_s3_filter_prefix = optional(string)
-        trigger_s3_events = optional(list(any))
-        trigger_s3_bucket = optional(string)
-    })
-  nullable = true
-}
+#variable "lambda_function_s3_trigger" {
+#  description = "Enable lambda function s3 trigger"
+#  default = {
+#    trigger_s3_filter_suffix = ""
+#    trigger_s3_filter_prefix = ""
+#    trigger_s3_events = []
+#    trigger_s3_bucket = "technodom-prod-data-lake-s3-lambda"
+#  }
+#    type = object({
+#        trigger_s3_filter_suffix = optional(string)
+#        trigger_s3_filter_prefix = optional(string)
+#        trigger_s3_events = optional(list(any))
+#        trigger_s3_bucket = optional(string)
+#    })
+#  nullable = true
+#}
 
