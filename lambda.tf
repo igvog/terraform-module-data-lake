@@ -317,7 +317,7 @@ resource "aws_cloudwatch_event_target" "lambda_cw_event_target" {
   rule      = aws_cloudwatch_event_rule.lambda_cw_event_rule[0].id
   target_id = local.full_name
   arn       = aws_lambda_function.lambda_function[0].arn
-  input = lambda_function_event_rule.json_target
+  input = var.lambda_function_event_rule.json_target
   lifecycle {
     create_before_destroy = true
     ignore_changes        = []
