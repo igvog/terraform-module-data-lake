@@ -152,6 +152,7 @@ variable "lambda_function_event_rule" {
   description = "Enable lambda integration with CloudWatch Event Rule for schedulled execution"
   type = object({
     schedule_expression = string
+    json_target = optional(map(any))
   })
 }
 
