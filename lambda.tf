@@ -317,7 +317,7 @@ resource "aws_cloudwatch_event_target" "lambda_cw_event_target" {
   rule      = aws_cloudwatch_event_rule.lambda_cw_event_rule[0].id
   target_id = local.full_name
   arn       = aws_lambda_function.lambda_function[0].arn
-
+  input = var.lambda_function_event_rule.json_target
   lifecycle {
     create_before_destroy = true
     ignore_changes        = []
@@ -382,22 +382,23 @@ resource "aws_lambda_function_url" "lambda_function_uri" {
 # Adding S3 bucket as trigger to my lambda and giving the permissions
 ##################
 
-#resource "aws_lambda_permission" "allow_bucket" {
-#  statement_id  = "AllowS3Invoke" #"AllowS3Invoke"
-#  action        = "lambda:InvokeFunction"
-#  function_name = "arn:aws:lambda:eu-north-1:313555887466:function:${local.full_name}"
-#  principal = "s3.amazonaws.com"
-#  source_arn = "arn:aws:s3:::${var.lambda_function_s3_trigger.trigger_s3_bucket}"
-#}
+resource "aws_lambda_permission" "allow_bucket" {
+  count = var.lambda_function_enable && var.lambda_function_s3_trigger_enable ? 1 : 0
+  statement_id  = "AllowS3Invoke" #"AllowS3Invoke"
+  action        = "lambda:InvokeFunction"
+  function_name = "arn:aws:lambda:eu-north-1:313555887466:function:${local.full_name}"
+  principal = "s3.amazonaws.com"
+  source_arn = "arn:aws:s3:::${var.lambda_function_s3_trigger.trigger_s3_bucket}"
+}
 
-#resource "aws_s3_bucket_notification" "aws-lambda-trigger" {
-#  count = var.lambda_function_enable && var.lambda_function_s3_trigger_enable ? 1 : 0
-#  bucket = var.lambda_function_s3_trigger.trigger_s3_bucket
-#  lambda_function {
-#  lambda_function_arn = "arn:aws:lambda:eu-north-1:313555887466:function:${local.full_name}"
-#  events              = var.lambda_function_s3_trigger.trigger_s3_events
-#  filter_prefix       = var.lambda_function_s3_trigger.trigger_s3_filter_prefix
-#  filter_suffix       = var.lambda_function_s3_trigger.trigger_s3_filter_suffix
-#  }
-#  depends_on = [aws_lambda_permission.allow_bucket]
-#}
+resource "aws_s3_bucket_notification" "aws-lambda-trigger" {
+  count = var.lambda_function_enable && var.lambda_function_s3_trigger_enable ? 1 : 0
+  bucket = var.lambda_function_s3_trigger.trigger_s3_bucket
+  lambda_function {
+  lambda_function_arn = "arn:aws:lambda:eu-north-1:313555887466:function:${local.full_name}"
+  events              = var.lambda_function_s3_trigger.trigger_s3_events
+  filter_prefix       = var.lambda_function_s3_trigger.trigger_s3_filter_prefix
+  filter_suffix       = var.lambda_function_s3_trigger.trigger_s3_filter_suffix
+  }
+  depends_on = [aws_lambda_permission.allow_bucket]
+}
