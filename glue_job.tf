@@ -16,7 +16,7 @@ resource "aws_glue_job" "glue_job" {
   description            = var.glue_job.description
   connections            = var.glue_job.connections
 #  default_arguments      = var.glue_job.default_arguments
-  glue_version           = var.glue_job.version != null ? var.glue_job.version : "3.0"
+  glue_version           = var.glue_job.version != null ? var.glue_job.version : "4.0"
   max_capacity           = var.glue_job.max_capacity
   max_retries            = var.glue_job.max_retries
   timeout                = var.glue_job.timeout
