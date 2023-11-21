@@ -38,6 +38,7 @@ resource "aws_glue_job" "glue_job" {
     "--enable-glue-datacatalog"          = "true"  
     "--job-bookmark-option"              = "job-bookmark-disable"
     "--additional-python-modules"        = var.glue_job.additional_python_modules
+    "--input-tables"                     = "all"
   }
 
 
