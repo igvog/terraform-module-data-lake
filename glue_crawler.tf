@@ -23,12 +23,12 @@ resource "aws_glue_crawler" "glue_crawler" {
   
   dynamic "delta_target" {
     iterator = delta_target
-    for_each = var.glue_crawler.delta_target != null ? var.glue_crawler.delta_target : []
+    for_each = var.glue_crawler.delta_target
   
     content {
-      connection_name = delta_target.connection_name
+      connection_name = ""
       delta_tables    = delta_target.delta_tables
-      write_manifest  = delta_target.write_manifest
+      write_manifest  = false
     }
   }
 
