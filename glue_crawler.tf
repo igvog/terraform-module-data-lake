@@ -27,7 +27,7 @@ resource "aws_glue_crawler" "glue_crawler" {
   
     content {
       connection_name = ""
-      delta_tables    = var.glue_crawlerdelta_target.delta_tables
+      delta_tables    = var.glue_crawler.delta_target.delta_tables
       write_manifest  = false
     }
   }
