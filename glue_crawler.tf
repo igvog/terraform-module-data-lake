@@ -116,5 +116,8 @@ resource "aws_glue_crawler" "glue_crawler" {
     create_before_destroy = true
     ignore_changes        = []
   }
-
+  depends_on = [
+    aws_glue_job.glue_job,
+    aws_s3_object.glue_script_upload
+  ]
 }
