@@ -26,9 +26,9 @@ resource "aws_glue_crawler" "glue_crawler" {
     for_each = var.glue_crawler.delta_target != null ? var.glue_crawler.delta_target : []
   
     content {
-      connection_name = lookup(delta_target.value, "connection_name", null)
-      delta_tables    = lookup(delta_target.value, "delta_tables", null)
-      write_manifest  = lookup(delta_target.value, "write_manifest", null)
+      connection_name = delta_target.connection_name
+      delta_tables    = delta_target.delta_tables
+      write_manifest  = delta_target.write_manifest
     }
   }
 
